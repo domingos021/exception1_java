@@ -59,9 +59,27 @@ public class Reservation {
         return ChronoUnit.DAYS.between(checkIn, checkOut);
     }
 
-    public void updateDates(LocalDate checkin, LocalDate checkout) {
-        this.checkIn = checkin;
-        this.checkOut = checkout;
+    public String updateDates(LocalDate checkIn, LocalDate checkOut) {
+        // Obtém a data atual do sistema para validação cronológica
+        LocalDate hoje = LocalDate.now();
+
+        // REGRAS DE NEGÓCIO PARA ATUALIZAÇÃO:
+        // 1. O check-in não pode ser retroativo (deve ser hoje ou futuro)
+        // 2. O check-out não pode ser retroativo (deve ser hoje ou futuro)
+        // 3. A data de saída deve ser posterior à data de entrada
+
+        // VALIDAÇÃO 1: Garante que nenhuma das duas datas esteja no passado em relação a hoje
+        if (checkIn.isBefore(hoje) || checkOut.isBefore(hoje)) {
+           return "reserva: as datas devem ser futuras.";
+           // VALIDAÇÃO 2: Garante que a data de check-out seja cronologicamente após o check-in
+        }
+        if (!checkOut.isAfter(checkIn)) {
+          return " reserva: a data do check-out(saida) precisa ser definida depois do check-in(entrada)";
+        }
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
+
+        return null; //porque não tem nenhum erro
     }
 
     @Override

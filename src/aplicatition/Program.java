@@ -75,27 +75,17 @@ public class Program {
                 System.out.print("Data do Check-out (dd/MM/yyyy): ");
                 checkOut = LocalDate.parse(sc.next(), DATE_FORMAT);
 
-                // Obtém a data atual do sistema para validação cronológica
-                LocalDate hoje = LocalDate.now();
 
-                // REGRAS DE NEGÓCIO PARA ATUALIZAÇÃO:
-                // 1. O check-in não pode ser retroativo (deve ser hoje ou futuro)
-                // 2. O check-out não pode ser retroativo (deve ser hoje ou futuro)
-                // 3. A data de saída deve ser posterior à data de entrada
+                // Executa a atualização da reserva.
+               // Se alguma regra de negócio for violada, o método retorna uma mensagem de erro.
+                String error = reserva.updateDates(checkIn, checkOut);
 
-                // VALIDAÇÃO 1: Garante que nenhuma das duas datas esteja no passado em relação a hoje
-                if (checkIn.isBefore(hoje) || checkOut.isBefore(hoje)) {
-                    System.out.println("Erro na reserva: as datas devem ser futuras.");
-
-                    // VALIDAÇÃO 2: Garante que a data de check-out seja cronologicamente após o check-in
-                } else if (!checkOut.isAfter(checkIn)) {
-                    System.out.println("Erro na reserva: a data do check-out(saida) precisa ser definida depois do check-in(entrada)");
-
+                if (error != null) {
+                    System.out.println("Erro na reserva " + error);
                 } else {
-                    // Sucesso: Executa a alteração do estado do objeto após passar em todas as validações
-                    reserva.updateDates(checkIn, checkOut);
                     System.out.println(reserva);
                 }
+
             }
         }
         sc.close();
