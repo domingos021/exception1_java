@@ -1,7 +1,7 @@
 package aplicatition;
 
-import model.exceptions.ReservationException;
-import model.entities.Reservation;
+import aplicatition.model.exceptions.ReservationException;
+import aplicatition.model.entities.Reservation;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -1,4 +1,4 @@
-package model.exceptions;
+package aplicatition.model.exceptions;
 
 /**
  * Exceção específica para regras de negócio relacionadas à Reservation.

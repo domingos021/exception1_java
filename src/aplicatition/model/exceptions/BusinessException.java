@@ -1,4 +1,4 @@
-package model.exceptions;
+package aplicatition.model.exceptions;
 
 import java.io.Serial;
 

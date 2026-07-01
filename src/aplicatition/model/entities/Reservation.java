@@ -1,6 +1,6 @@
-package model.entities;
+package aplicatition.model.entities;
 
-import model.exceptions.ReservationException;
+import aplicatition.model.exceptions.ReservationException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
