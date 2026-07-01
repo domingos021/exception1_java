@@ -1,5 +1,7 @@
 package model.entities;
 
+import model.exceptions.ReservationException;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -17,10 +19,16 @@ public class Reservation {
     public Reservation() {
     }
 
-    public Reservation(Integer roomNumber, LocalDate checkin, LocalDate checkout) {
+    public Reservation(Integer roomNumber, LocalDate checkIn, LocalDate checkOut) {
+        // VALIDAÇÃO NA CRIAÇÃO: Impede que a reserva nasça com erro cronológico (-2 noites)
+        if (!checkOut.isAfter(checkIn)) {
+            throw new ReservationException("Check-out deve ser após o check-in.");
+        }
+
         this.roomNumber = roomNumber;
-        this.checkIn = checkin;
-        this.checkOut = checkout;
+        // AJUSTADO: Corrigido o nome das variáveis para bater com os parâmetros (CamelCase)
+        this.checkIn = checkIn;
+        this.checkOut = checkOut;
     }
 
     public Integer getRoomNumber() {
@@ -59,7 +67,7 @@ public class Reservation {
         return ChronoUnit.DAYS.between(checkIn, checkOut);
     }
 
-    public String updateDates(LocalDate checkIn, LocalDate checkOut) {
+    public void updateDates(LocalDate checkIn, LocalDate checkOut) {
         // Obtém a data atual do sistema para validação cronológica
         LocalDate hoje = LocalDate.now();
 
@@ -70,16 +78,21 @@ public class Reservation {
 
         // VALIDAÇÃO 1: Garante que nenhuma das duas datas esteja no passado em relação a hoje
         if (checkIn.isBefore(hoje) || checkOut.isBefore(hoje)) {
-           return "reserva: as datas devem ser futuras.";
-           // VALIDAÇÃO 2: Garante que a data de check-out seja cronologicamente após o check-in
+            // ao invés de retornar string lançamos uma exceção com throw
+            // PADRÃO DE MERCADO: Adicionado o 'new' para instanciar a exceção corretamente
+            throw new ReservationException("As datas devem ser futuras.");
         }
+
+        // VALIDAÇÃO 2: Garante que a data de check-out seja cronologicamente após o check-in
         if (!checkOut.isAfter(checkIn)) {
-          return " reserva: a data do check-out(saida) precisa ser definida depois do check-in(entrada)";
+            // Substituído o retorno de String por lançamento de exceção para manter a consistência do método void
+            throw new ReservationException("Check-out deve ser após o check-in.");
         }
+
         this.checkIn = checkIn;
         this.checkOut = checkOut;
 
-        return null; //porque não tem nenhum erro
+        // Não precisa de 'return null', pois o método agora é estritamente 'void' (sem retorno)
     }
 
     @Override
