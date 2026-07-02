@@ -2,20 +2,20 @@ package exerFixac.model.entities;
 
 import exerFixac.exception.AccountException;
 
-public class PubicAccount extends Account {
+public class PublicAccount extends Account {
 
-    private Double withdrawLimit;
+    private double withdrawLimit;
 
-    public PubicAccount(Integer number, Double balance, String holderName, Double withdrawLimit) {
-        super(number, balance, holderName); // Ajustado para casar com a ordem (Integer, Double, String) de Account
+    public PublicAccount(int number, double balance, String holderName, double withdrawLimit) {
+        super(number, balance, holderName);
         this.withdrawLimit = withdrawLimit;
     }
 
-    public Double getWithdrawLimit() {
+    public double getWithdrawLimit() {
         return withdrawLimit;
     }
 
-    public void setWithdrawLimit(Double withdrawLimit) {
+    public void setWithdrawLimit(double withdrawLimit) {
         this.withdrawLimit = withdrawLimit;
     }
 
@@ -23,7 +23,7 @@ public class PubicAccount extends Account {
      * Realiza um depósito adicionando o valor ao saldo.
      */
     @Override
-    public void deposit(Double amount) {
+    public void deposit(double amount) {
         balance += amount;
     }
 
@@ -32,7 +32,7 @@ public class PubicAccount extends Account {
      * e verificando se há saldo suficiente.
      */
     @Override
-    public void withdraw(Double amount) {
+    public void withdraw(double amount) {
 
         // Verifica se o valor ultrapassa o limite de saque.
         if (amount > withdrawLimit) {

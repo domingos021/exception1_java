@@ -1,44 +1,30 @@
 package exerFixac;
 
-import aplicatition.model.exceptions.ReservationException;
 import exerFixac.exception.AccountException;
 import exerFixac.model.entities.Account;
-import exerFixac.model.entities.PubicAccount;
+import exerFixac.model.entities.PublicAccount;
+import exerFixac.utils.Leitor;
 
 import java.util.*;
 
 public class ProgramAccount {
     public static void main(String[] args) {
         Locale.setDefault(Locale.US);
+
         try (Scanner sc = new Scanner(System.in)) {
-            // Cria uma lista capaz de armazenar objetos do tipo Account.
-            // Como a lista é do tipo Account, ela também pode armazenar
-            // qualquer objeto das subclasses de Account
-            // (ex.: PublicAccount, BusinessAccount, SavingsAccount, etc.).
             List<Account> list = new ArrayList<>();
 
             System.out.println("Insira os dados da conta");
-            System.out.println("Digite o número da conta: ");
-            int number = sc.nextInt();
+            // Agora chamando a classe utilitária Leitor
+            int number = Leitor.lerNumeroInteiro(sc, "Número da conta: ");
+            String holderName = Leitor.lerTexto(sc, "Nome do titular: ");
+            double initialBalance = Leitor.lerNumeroDouble(sc, "Digite o saldo inicial: ");
+            double withdrawLimit = Leitor.lerNumeroDouble(sc, "Digite o limite de saque: ");
 
-            System.out.println("Digite o nome do titular: ");
-            sc.nextLine(); // Limpa o buffer do scanner
-            String holderName = sc.nextLine();
+            // Adiciona na lista usando Polimorfismo
+            list.add(new PublicAccount(number, initialBalance, holderName, withdrawLimit));
 
-            System.out.println("Digite o saldo inicial: ");
-            double initialBalance = sc.nextDouble();
-
-            System.out.println("Digite o limite de saque: ");
-            double withdrawLimit = sc.nextDouble();
-
-            // Adiciona um objeto da classe PublicAccount na lista.
-            //
-            // Apesar do objeto ser um PublicAccount, ele é armazenado
-            // como um Account. Isso é possível graças ao polimorfismo
-            // (upcasting automático).
-            list.add(new PubicAccount(number, initialBalance, holderName, withdrawLimit));
-
-            //exibe os dados
+            // Exibe os dados iniciais
             for (Account account : list) {
                 System.out.printf("""
                                 
@@ -54,14 +40,13 @@ public class ProgramAccount {
                 );
             }
 
-            //SAQUE
-            System.out.println("\nDigite o valor do saque: ");
-            double amount = sc.nextDouble();
-            // Como a lista é do tipo Account, podemos chamar o método withdraw()
-            // diretamente, e o Java vai decidir em tempo de execução qual implementação
-            // do método deve ser executada (polimorfismo dinâmico).
+            // SAQUE
+            double amount = Leitor.lerNumeroDouble(sc, "Digite o valor do saque: ");
 
-            list.getFirst().withdraw(amount); // Chama o método withdraw() do objeto na posição 0 da lista
+            // Executa o saque utilizando Polimorfismo Dinâmico
+            list.getFirst().withdraw(amount);
+
+            // Exibe os dados atualizados
             for (Account account : list) {
                 System.out.printf("""
                                 
@@ -78,24 +63,31 @@ public class ProgramAccount {
             }
 
         } catch (AccountException e) {
-            // Captura erros relacionados às regras de negócio da conta
-            // (ex.: saldo insuficiente ou limite de saque excedido).
             System.out.println("Erro no saque: " + e.getMessage());
-
-        } catch (InputMismatchException e) {
-            // Captura erros de entrada quando o usuário informa
-            // um tipo de dado diferente do esperado.
-            // Ex.: digitar "abc" quando o programa espera um número.
-            System.out.println("Erro de entrada: valor inválido.");
-
+        } catch (Leitor.LeituraInvalidaException e) {
+            System.out.println("Erro de entrada: " + e.getMessage());
         } catch (RuntimeException e) {
-            // Captura qualquer outra exceção não tratada anteriormente.
             System.out.println("Erro inesperado no sistema.");
             System.out.println("Detalhes: " + e.getMessage());
         }
-
-    } // catchs aqui
-
-
+    }
 }
 
+
+/*
+exerFixac/
+└── src/
+    └── exerFixac/
+        ├── ProgramAccount.java       <-- Contém o método main (Ponto de entrada)
+        │
+        ├── model/
+        │   └── entities/            <-- REGRAS DE NEGÓCIO (O "Mundo Real")
+        │       ├── Account.java
+        │       └── PubicAccount.java  <-- Renomear para PublicAccount.java
+        │
+        ├── exception/                <-- TRATAMENTO DE ERROS DO NEGÓCIO
+        │   └── AccountException.java
+        │
+        └── utils/                    <-- FERRAMENTAS DE SUPORTE (Sua Biblioteca)
+            └── Leitor.java
+ */

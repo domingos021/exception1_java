@@ -9,14 +9,14 @@ package exerFixac.model.entities;
 public abstract class Account {
 
     // Número da conta
-    private Integer number;
+    private int number;
 
     // Nome do titular
     private String holderName;
 
     // Saldo da conta.
     // É protected para que as subclasses possam acessá-lo diretamente.
-    protected Double balance;
+    protected double balance;
 
     /**
      * Construtor padrão.
@@ -31,7 +31,7 @@ public abstract class Account {
      * @param balance Saldo inicial.
      * @param holderName Nome do titular.
      */
-    public Account(Integer number, Double balance, String holderName) {
+    public Account(int number, double balance, String holderName) {
         this.number = number;
         this.balance = balance;
         this.holderName = holderName;
@@ -41,11 +41,11 @@ public abstract class Account {
     // GETTERS E SETTERS
     // ===========================
 
-    public Integer getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(Integer number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
@@ -57,10 +57,9 @@ public abstract class Account {
         this.holderName = holderName;
     }
 
-    public Double getBalance() {
+    public double getBalance() {
         return balance;
     }
-
 
     // ===========================
     // MÉTODOS ABSTRATOS
@@ -72,7 +71,7 @@ public abstract class Account {
      *
      * @param amount Valor do depósito.
      */
-    public abstract void deposit(Double amount);
+    public abstract void deposit(double amount);
 
     /**
      * Realiza um saque.
@@ -80,5 +79,5 @@ public abstract class Account {
      *
      * @param amount Valor do saque.
      */
-    public abstract void withdraw(Double amount);
+    public abstract void withdraw(double amount);
 }
